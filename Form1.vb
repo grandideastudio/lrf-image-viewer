@@ -49,8 +49,17 @@ Public Class Form1
                My.Computer.Ports.SerialPortNames(i))
         Next
         cbbCOMPorts.SelectedIndex = 0
-        boxBaud.Items.Add("115200")         ' Fill available baud rate speeds into selection box (LRF defaults to 115.2k, so force the program to use it)
-        boxBaud.SelectedIndex = 0
+        boxBaud.Items.Add("300")         ' Fill available baud rate speeds into selection box
+        boxBaud.Items.Add("600")
+        boxBaud.Items.Add("1200")
+        boxBaud.Items.Add("2400")
+        boxBaud.Items.Add("4800")
+        boxBaud.Items.Add("9600")
+        boxBaud.Items.Add("19200")
+        boxBaud.Items.Add("38400")
+        boxBaud.Items.Add("57600")
+        boxBaud.Items.Add("115200")
+        boxBaud.SelectedIndex = 9           ' Select 115.2kbps as default
         btnDisconnect.Enabled = False
         AcceptButton = btnSend              ' Assign Send button to be the form's primary button when Enter is pressed 
 
@@ -453,6 +462,9 @@ Public Class Form1
             serialPort.Open()
             serialPort.DiscardInBuffer()
             serialPort.DiscardOutBuffer()
+
+            serialPort.Write("U")           ' Upon power-up, the LRF waits for a "U" character to be sent in order to automatically detect baud rate
+            serialPort.ReadTo(":")          ' Wait for the LRF to send a ":" indicating that a proper baud rate has been found and that it is ready to receive commands
 
             btnConnect.Enabled = False
             btnDisconnect.Enabled = True
