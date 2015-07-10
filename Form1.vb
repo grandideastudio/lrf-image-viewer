@@ -20,9 +20,11 @@ Public Class Form1
     Dim WithEvents serialPort As New IO.Ports.SerialPort
     Public fg_flag As Byte      ' set to 1 when a frame grab is in progress
     Public myStr As String      ' global string used to store input from serial port
+    Public bmp As Bitmap        ' bitmap object to store frame image
+    ' in VB.NET, arrays are initialized with the UpperBound of the array (number of elements - 1)
     Public buf((_FB_X_GRY * _FB_Y_GRY) - 1) As Byte        ' serial port input buffer in byte form (total number of elements should always match number of bytes in frame)
     Public yuv444((_FB_X_CLR * _FB_Y_CLR) - 1) As YUV
-    Public bmp As Bitmap        ' bitmap object to store frame image
+
 
     ' Image processing/blob finding
     Structure blobStruct
@@ -49,17 +51,14 @@ Public Class Form1
                My.Computer.Ports.SerialPortNames(i))
         Next
         cbbCOMPorts.SelectedIndex = 0
-        boxBaud.Items.Add("300")         ' Fill available baud rate speeds into selection box
-        boxBaud.Items.Add("600")
-        boxBaud.Items.Add("1200")
-        boxBaud.Items.Add("2400")
-        boxBaud.Items.Add("4800")
+
+        ' Fill available baud rate speeds into selection box
         boxBaud.Items.Add("9600")
         boxBaud.Items.Add("19200")
         boxBaud.Items.Add("38400")
         boxBaud.Items.Add("57600")
         boxBaud.Items.Add("115200")
-        boxBaud.SelectedIndex = 9           ' Select 115.2kbps as default
+        boxBaud.SelectedIndex = 4           ' Select 115.2kbps as default
         btnDisconnect.Enabled = False
         AcceptButton = btnSend              ' Assign Send button to be the form's primary button when Enter is pressed 
 
@@ -90,10 +89,35 @@ Public Class Form1
     End Sub
 
 
+    'Public Function read_bytes(ByVal port As IO.Ports.SerialPort, ByVal count As Integer) As Byte() ' read contents of serial port buffer (as bytes)
+    '    Dim buffer(count - 1) As Byte
+    '    Dim readBytes As Integer
+    '    Dim totalReadBytes As Integer
+    '    Dim offset As Integer
+    '    Dim remaining As Integer = count
+
+    '    Try
+    '        Do
+    '            readBytes = port.Read(buffer, offset, remaining)
+    '            offset += readBytes
+    '            remaining -= readBytes
+    '            totalReadBytes += readBytes
+    '        Loop While remaining > 0 AndAlso readBytes > 0
+    '    Catch ex As TimeoutException  ' if the requested number of bytes aren't received and we exceed serialPort.timeout...
+    '        ReDim Preserve buffer(totalReadBytes - 1)  ' save the buffer and continue
+    '        MsgBox(ex.Message)
+    '    End Try
+
+    '    Return buffer
+
+    'End Function
+
+
     Private Sub frame_grab() ' grab a single frame from the LRF module and display it on the screen
         '    Try
         Dim i, ix, iy As Integer
         Dim val As Integer
+        'Dim len As Integer
 
         txtMessage.AppendText(Convert.ToString("Grabbing frame..."))
         txtMessage.Update() ' force update of text box
@@ -104,12 +128,12 @@ Public Class Form1
         If radFrameGrey.Checked Then    ' GREYSCALE
             serialPort.Write("G")       ' send command to LRF
 
-            myStr = serialPort.ReadTo("END" & vbCr & ":")  ' read contents of serial port buffer until the entire frame has been sent
+            myStr = serialPort.ReadTo("END" & vbCr & ":")  ' read contents of serial port buffer (into a String) until the entire frame has been sent
+            ' convert String into an array of bytes
+            buf = System.Text.Encoding.GetEncoding(1252).GetBytes(myStr)   ' 1252 is the default codepage on US Windows
 
-            Array.Clear(buf, 0, buf.Length)       ' clear the contents of the byte array before copying in data from the new frame
-            For i = 0 To (myStr.Length - 1)       ' convert String received by serialPort.ReadTo command into a byte array 
-                buf(i) = CByte(Asc(myStr(i)))
-            Next
+            'len = _FB_X_GRY * _FB_Y_GRY
+            'buf = read_bytes(serialPort, len)  ' read contents of serial port buffer (as bytes) for the entire frame size
 
             ' fill in bitmap with pixel data
             ' 8 bits/pixel, only using the Y/luma component
@@ -127,12 +151,12 @@ Public Class Form1
                 serialPort.Write("C")           ' send command to LRF
             End If
 
-            myStr = serialPort.ReadTo("END" & vbCr & ":")  ' read contents of serial port buffer until the entire frame has been sent
+            myStr = serialPort.ReadTo("END" & vbCr & ":")  ' read contents of serial port buffer (into a String) until the entire frame has been sent
+            ' convert String into an array of bytes
+            buf = System.Text.Encoding.GetEncoding(1252).GetBytes(myStr)   ' 1252 is the default codepage on US Windows
 
-            Array.Clear(buf, 0, buf.Length)       ' clear the contents of the byte array before copying in data from the new frame
-            For i = 0 To (myStr.Length - 1)     ' convert String received by serialPort.ReadTo command into a byte array 
-                buf(i) = CByte(Asc(myStr(i)))
-            Next
+            'len = _FB_X_CLR * _FB_Y_CLR * 2
+            'buf = read_bytes(serialPort, len)  ' read contents of serial port buffer (as bytes) for the entire frame size
 
             ' 16 bits/pixel YUV422
             ' ColorHelper object and conversion routines from http://www.codeproject.com/KB/recipes/colorspace1.aspx
@@ -448,15 +472,15 @@ Public Class Form1
         End If
         Try
             With serialPort
-                '.PortName = "COM11" ' hard-code COM port for development purposes
+                '.PortName = "COM8" ' hard-code COM port for development purposes
                 .PortName = cbbCOMPorts.Text
                 .BaudRate = Val(boxBaud.SelectedItem().ToString())
                 .Parity = IO.Ports.Parity.None
                 .DataBits = 8
                 .StopBits = IO.Ports.StopBits.One
-                .ReadTimeout = 5000 ' ms
-                .Encoding = System.Text.Encoding.Default
-                .ReadBufferSize = 32768  ' Make sure input buffer is large
+                .Encoding = System.Text.Encoding.GetEncoding(1252)   '1252 is the default codepage on US Windows (English)
+                .ReadBufferSize = 32768  ' Make sure input buffer is larger than we expect to receive at any given time
+                .ReadTimeout = 2000 ' default setting in ms
             End With
 
             serialPort.Open()
@@ -465,7 +489,25 @@ Public Class Form1
 
             serialPort.Write("U")           ' Upon power-up, the LRF waits for a "U" character to be sent in order to automatically detect baud rate
             serialPort.ReadTo(":")          ' Wait for the LRF to send a ":" indicating that a proper baud rate has been found and that it is ready to receive commands
+            ' If we don't receive the ":" within the default ReadTimeout, we'll get a TimeoutException
 
+            ' Once we know the correct COM port is open and we can properly communicate with the LRF, 
+            ' set the read timeout in ms depending on the selected baud rate (long enough to receive an entire frame w/ some additional overhead)
+            Select Case serialPort.BaudRate
+                Case 9600
+                    serialPort.ReadTimeout = 30000
+                Case 19200
+                    serialPort.ReadTimeout = 18000
+                Case 38400
+                    serialPort.ReadTimeout = 12000
+                Case 57600
+                    serialPort.ReadTimeout = 8000
+                Case 115200
+                    serialPort.ReadTimeout = 5000
+            End Select
+
+            cbbCOMPorts.Enabled = False
+            boxBaud.Enabled = False
             btnConnect.Enabled = False
             btnDisconnect.Enabled = True
             btnGrab.Enabled = True
@@ -507,6 +549,8 @@ Public Class Form1
             txtMessage.AppendText(serialPort.PortName & Convert.ToString(" disconnected." & vbCr))  ' update screen with information
             txtMessage.ScrollToCaret()
 
+            cbbCOMPorts.Enabled = True
+            boxBaud.Enabled = True
             btnConnect.Enabled = True
             btnDisconnect.Enabled = False
             btnGrab.Enabled = False
