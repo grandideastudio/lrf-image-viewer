@@ -30,20 +30,20 @@ Partial Class Form1
         Me.pnlBounds = New System.Windows.Forms.Panel()
         Me.pnlUpper = New System.Windows.Forms.Panel()
         Me.pnlLower = New System.Windows.Forms.Panel()
-        Me.Label13 = New System.Windows.Forms.Label()
+        Me.LabelYLower = New System.Windows.Forms.Label()
         Me.vUDUpper = New System.Windows.Forms.NumericUpDown()
-        Me.Label12 = New System.Windows.Forms.Label()
+        Me.LabelULower = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
+        Me.LabelVUpper = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
+        Me.LabelYUpper = New System.Windows.Forms.Label()
         Me.vUDLower = New System.Windows.Forms.NumericUpDown()
-        Me.Label11 = New System.Windows.Forms.Label()
+        Me.LabelVLower = New System.Windows.Forms.Label()
         Me.uUDUpper = New System.Windows.Forms.NumericUpDown()
         Me.yUDLower = New System.Windows.Forms.NumericUpDown()
         Me.uUDLower = New System.Windows.Forms.NumericUpDown()
         Me.yUDUpper = New System.Windows.Forms.NumericUpDown()
-        Me.Label7 = New System.Windows.Forms.Label()
+        Me.LabelUUpper = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.radTrackBounds = New System.Windows.Forms.RadioButton()
         Me.radTrackCentroid = New System.Windows.Forms.RadioButton()
@@ -58,8 +58,9 @@ Partial Class Form1
         Me.Label19 = New System.Windows.Forms.Label()
         Me.btnSave = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.radFrameGrey = New System.Windows.Forms.RadioButton()
-        Me.radFrameColor = New System.Windows.Forms.RadioButton()
+        Me.radFrameROIProc = New System.Windows.Forms.RadioButton()
+        Me.radFrameFull = New System.Windows.Forms.RadioButton()
+        Me.radFrameROI = New System.Windows.Forms.RadioButton()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.boxBaud = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -162,20 +163,20 @@ Partial Class Form1
         '
         Me.pnlBounds.Controls.Add(Me.pnlUpper)
         Me.pnlBounds.Controls.Add(Me.pnlLower)
-        Me.pnlBounds.Controls.Add(Me.Label13)
+        Me.pnlBounds.Controls.Add(Me.LabelYLower)
         Me.pnlBounds.Controls.Add(Me.vUDUpper)
-        Me.pnlBounds.Controls.Add(Me.Label12)
+        Me.pnlBounds.Controls.Add(Me.LabelULower)
         Me.pnlBounds.Controls.Add(Me.Label15)
-        Me.pnlBounds.Controls.Add(Me.Label6)
+        Me.pnlBounds.Controls.Add(Me.LabelVUpper)
         Me.pnlBounds.Controls.Add(Me.Label9)
-        Me.pnlBounds.Controls.Add(Me.Label8)
+        Me.pnlBounds.Controls.Add(Me.LabelYUpper)
         Me.pnlBounds.Controls.Add(Me.vUDLower)
-        Me.pnlBounds.Controls.Add(Me.Label11)
+        Me.pnlBounds.Controls.Add(Me.LabelVLower)
         Me.pnlBounds.Controls.Add(Me.uUDUpper)
         Me.pnlBounds.Controls.Add(Me.yUDLower)
         Me.pnlBounds.Controls.Add(Me.uUDLower)
         Me.pnlBounds.Controls.Add(Me.yUDUpper)
-        Me.pnlBounds.Controls.Add(Me.Label7)
+        Me.pnlBounds.Controls.Add(Me.LabelUUpper)
         Me.pnlBounds.Enabled = False
         Me.pnlBounds.Location = New System.Drawing.Point(489, 496)
         Me.pnlBounds.Name = "pnlBounds"
@@ -200,17 +201,17 @@ Partial Class Form1
         Me.pnlLower.Size = New System.Drawing.Size(35, 20)
         Me.pnlLower.TabIndex = 61
         '
-        'Label13
+        'LabelYLower
         '
-        Me.Label13.AutoSize = True
-        Me.Label13.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(55, 38)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(14, 13)
-        Me.Label13.TabIndex = 0
-        Me.Label13.Text = "Y"
-        Me.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LabelYLower.AutoSize = True
+        Me.LabelYLower.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.LabelYLower.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelYLower.Location = New System.Drawing.Point(58, 38)
+        Me.LabelYLower.Name = "LabelYLower"
+        Me.LabelYLower.Size = New System.Drawing.Size(14, 13)
+        Me.LabelYLower.TabIndex = 0
+        Me.LabelYLower.Text = "Y"
+        Me.LabelYLower.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'vUDUpper
         '
@@ -221,17 +222,17 @@ Partial Class Form1
         Me.vUDUpper.TabIndex = 22
         Me.vUDUpper.Value = New Decimal(New Integer() {123, 0, 0, 0})
         '
-        'Label12
+        'LabelULower
         '
-        Me.Label12.AutoSize = True
-        Me.Label12.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(126, 38)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(15, 13)
-        Me.Label12.TabIndex = 1
-        Me.Label12.Text = "U"
-        Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LabelULower.AutoSize = True
+        Me.LabelULower.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.LabelULower.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelULower.Location = New System.Drawing.Point(126, 38)
+        Me.LabelULower.Name = "LabelULower"
+        Me.LabelULower.Size = New System.Drawing.Size(15, 13)
+        Me.LabelULower.TabIndex = 1
+        Me.LabelULower.Text = "U"
+        Me.LabelULower.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Label15
         '
@@ -242,38 +243,38 @@ Partial Class Form1
         Me.Label15.TabIndex = 74
         Me.Label15.Text = "Lower"
         '
-        'Label6
+        'LabelVUpper
         '
-        Me.Label6.AutoSize = True
-        Me.Label6.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(197, 9)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(14, 13)
-        Me.Label6.TabIndex = 2
-        Me.Label6.Text = "V"
-        Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LabelVUpper.AutoSize = True
+        Me.LabelVUpper.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.LabelVUpper.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelVUpper.Location = New System.Drawing.Point(198, 9)
+        Me.LabelVUpper.Name = "LabelVUpper"
+        Me.LabelVUpper.Size = New System.Drawing.Size(14, 13)
+        Me.LabelVUpper.TabIndex = 2
+        Me.LabelVUpper.Text = "V"
+        Me.LabelVUpper.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(13, 6)
+        Me.Label9.Location = New System.Drawing.Point(13, 9)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(36, 13)
         Me.Label9.TabIndex = 73
         Me.Label9.Text = "Upper"
         '
-        'Label8
+        'LabelYUpper
         '
-        Me.Label8.AutoSize = True
-        Me.Label8.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(55, 6)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(14, 13)
-        Me.Label8.TabIndex = 0
-        Me.Label8.Text = "Y"
-        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LabelYUpper.AutoSize = True
+        Me.LabelYUpper.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.LabelYUpper.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelYUpper.Location = New System.Drawing.Point(58, 9)
+        Me.LabelYUpper.Name = "LabelYUpper"
+        Me.LabelYUpper.Size = New System.Drawing.Size(14, 13)
+        Me.LabelYUpper.TabIndex = 0
+        Me.LabelYUpper.Text = "Y"
+        Me.LabelYUpper.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'vUDLower
         '
@@ -283,17 +284,17 @@ Partial Class Form1
         Me.vUDLower.Size = New System.Drawing.Size(46, 20)
         Me.vUDLower.TabIndex = 26
         '
-        'Label11
+        'LabelVLower
         '
-        Me.Label11.AutoSize = True
-        Me.Label11.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(197, 38)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(14, 13)
-        Me.Label11.TabIndex = 2
-        Me.Label11.Text = "V"
-        Me.Label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LabelVLower.AutoSize = True
+        Me.LabelVLower.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.LabelVLower.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelVLower.Location = New System.Drawing.Point(198, 38)
+        Me.LabelVLower.Name = "LabelVLower"
+        Me.LabelVLower.Size = New System.Drawing.Size(14, 13)
+        Me.LabelVLower.TabIndex = 2
+        Me.LabelVLower.Text = "V"
+        Me.LabelVLower.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'uUDUpper
         '
@@ -328,17 +329,17 @@ Partial Class Form1
         Me.yUDUpper.TabIndex = 20
         Me.yUDUpper.Value = New Decimal(New Integer() {100, 0, 0, 0})
         '
-        'Label7
+        'LabelUUpper
         '
-        Me.Label7.AutoSize = True
-        Me.Label7.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(126, 9)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(15, 13)
-        Me.Label7.TabIndex = 1
-        Me.Label7.Text = "U"
-        Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.LabelUUpper.AutoSize = True
+        Me.LabelUUpper.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.LabelUUpper.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelUUpper.Location = New System.Drawing.Point(126, 9)
+        Me.LabelUUpper.Name = "LabelUUpper"
+        Me.LabelUUpper.Size = New System.Drawing.Size(15, 13)
+        Me.LabelUUpper.TabIndex = 1
+        Me.LabelUUpper.Text = "U"
+        Me.LabelUUpper.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Panel1
         '
@@ -377,8 +378,6 @@ Partial Class Form1
         'chkBlob
         '
         Me.chkBlob.AutoSize = True
-        Me.chkBlob.Checked = True
-        Me.chkBlob.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkBlob.Enabled = False
         Me.chkBlob.Location = New System.Drawing.Point(463, 473)
         Me.chkBlob.Name = "chkBlob"
@@ -438,7 +437,7 @@ Partial Class Form1
         '
         'lblResY
         '
-        Me.lblResY.Location = New System.Drawing.Point(802, 391)
+        Me.lblResY.Location = New System.Drawing.Point(790, 430)
         Me.lblResY.Name = "lblResY"
         Me.lblResY.Size = New System.Drawing.Size(26, 22)
         Me.lblResY.TabIndex = 104
@@ -448,7 +447,7 @@ Partial Class Form1
         'Label20
         '
         Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(793, 395)
+        Me.Label20.Location = New System.Drawing.Point(781, 434)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(12, 13)
         Me.Label20.TabIndex = 103
@@ -456,7 +455,7 @@ Partial Class Form1
         '
         'lblResX
         '
-        Me.lblResX.Location = New System.Drawing.Point(771, 391)
+        Me.lblResX.Location = New System.Drawing.Point(759, 430)
         Me.lblResX.Name = "lblResX"
         Me.lblResX.Size = New System.Drawing.Size(26, 22)
         Me.lblResX.TabIndex = 102
@@ -466,7 +465,7 @@ Partial Class Form1
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(712, 395)
+        Me.Label19.Location = New System.Drawing.Point(700, 434)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(63, 13)
         Me.Label19.TabIndex = 101
@@ -484,36 +483,48 @@ Partial Class Form1
         '
         'Panel4
         '
-        Me.Panel4.Controls.Add(Me.radFrameGrey)
-        Me.Panel4.Controls.Add(Me.radFrameColor)
+        Me.Panel4.Controls.Add(Me.radFrameROIProc)
+        Me.Panel4.Controls.Add(Me.radFrameFull)
+        Me.Panel4.Controls.Add(Me.radFrameROI)
         Me.Panel4.Location = New System.Drawing.Point(564, 390)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(129, 27)
+        Me.Panel4.Size = New System.Drawing.Size(226, 27)
         Me.Panel4.TabIndex = 10
         '
-        'radFrameGrey
+        'radFrameROIProc
         '
-        Me.radFrameGrey.AutoSize = True
-        Me.radFrameGrey.Checked = True
-        Me.radFrameGrey.Enabled = False
-        Me.radFrameGrey.Location = New System.Drawing.Point(3, 3)
-        Me.radFrameGrey.Name = "radFrameGrey"
-        Me.radFrameGrey.Size = New System.Drawing.Size(72, 17)
-        Me.radFrameGrey.TabIndex = 11
-        Me.radFrameGrey.TabStop = True
-        Me.radFrameGrey.Text = "Greyscale"
-        Me.radFrameGrey.UseVisualStyleBackColor = True
+        Me.radFrameROIProc.AutoSize = True
+        Me.radFrameROIProc.Enabled = False
+        Me.radFrameROIProc.Location = New System.Drawing.Point(126, 3)
+        Me.radFrameROIProc.Name = "radFrameROIProc"
+        Me.radFrameROIProc.Size = New System.Drawing.Size(97, 17)
+        Me.radFrameROIProc.TabIndex = 133
+        Me.radFrameROIProc.Text = "ROI Processed"
+        Me.radFrameROIProc.UseVisualStyleBackColor = True
         '
-        'radFrameColor
+        'radFrameFull
         '
-        Me.radFrameColor.AutoSize = True
-        Me.radFrameColor.Enabled = False
-        Me.radFrameColor.Location = New System.Drawing.Point(78, 3)
-        Me.radFrameColor.Name = "radFrameColor"
-        Me.radFrameColor.Size = New System.Drawing.Size(49, 17)
-        Me.radFrameColor.TabIndex = 12
-        Me.radFrameColor.Text = "Color"
-        Me.radFrameColor.UseVisualStyleBackColor = True
+        Me.radFrameFull.AutoSize = True
+        Me.radFrameFull.Checked = True
+        Me.radFrameFull.Enabled = False
+        Me.radFrameFull.Location = New System.Drawing.Point(3, 3)
+        Me.radFrameFull.Name = "radFrameFull"
+        Me.radFrameFull.Size = New System.Drawing.Size(73, 17)
+        Me.radFrameFull.TabIndex = 11
+        Me.radFrameFull.TabStop = True
+        Me.radFrameFull.Text = "Full Frame"
+        Me.radFrameFull.UseVisualStyleBackColor = True
+        '
+        'radFrameROI
+        '
+        Me.radFrameROI.AutoSize = True
+        Me.radFrameROI.Enabled = False
+        Me.radFrameROI.Location = New System.Drawing.Point(78, 3)
+        Me.radFrameROI.Name = "radFrameROI"
+        Me.radFrameROI.Size = New System.Drawing.Size(44, 17)
+        Me.radFrameROI.TabIndex = 12
+        Me.radFrameROI.Text = "ROI"
+        Me.radFrameROI.UseVisualStyleBackColor = True
         '
         'Label4
         '
@@ -664,7 +675,6 @@ Partial Class Form1
         Me.txtSlope.Size = New System.Drawing.Size(94, 20)
         Me.txtSlope.TabIndex = 129
         Me.txtSlope.TabStop = False
-        Me.txtSlope.Text = "0.00154555"
         '
         'Label10
         '
@@ -691,7 +701,6 @@ Partial Class Form1
         Me.txtIntercept.Size = New System.Drawing.Size(94, 20)
         Me.txtIntercept.TabIndex = 131
         Me.txtIntercept.TabStop = False
-        Me.txtIntercept.Text = "-0.0253021"
         '
         'Form1
         '
@@ -767,20 +776,20 @@ Partial Class Form1
     Friend WithEvents pnlBounds As System.Windows.Forms.Panel
     Friend WithEvents pnlUpper As System.Windows.Forms.Panel
     Friend WithEvents pnlLower As System.Windows.Forms.Panel
-    Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents LabelYLower As System.Windows.Forms.Label
     Friend WithEvents vUDUpper As System.Windows.Forms.NumericUpDown
-    Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents LabelULower As System.Windows.Forms.Label
     Friend WithEvents Label15 As System.Windows.Forms.Label
-    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents LabelVUpper As System.Windows.Forms.Label
     Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents LabelYUpper As System.Windows.Forms.Label
     Friend WithEvents vUDLower As System.Windows.Forms.NumericUpDown
-    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents LabelVLower As System.Windows.Forms.Label
     Friend WithEvents uUDUpper As System.Windows.Forms.NumericUpDown
     Friend WithEvents yUDLower As System.Windows.Forms.NumericUpDown
     Friend WithEvents uUDLower As System.Windows.Forms.NumericUpDown
     Friend WithEvents yUDUpper As System.Windows.Forms.NumericUpDown
-    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents LabelUUpper As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents radTrackBounds As System.Windows.Forms.RadioButton
     Friend WithEvents radTrackCentroid As System.Windows.Forms.RadioButton
@@ -795,8 +804,8 @@ Partial Class Form1
     Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents btnSave As System.Windows.Forms.Button
     Friend WithEvents Panel4 As System.Windows.Forms.Panel
-    Friend WithEvents radFrameGrey As System.Windows.Forms.RadioButton
-    Friend WithEvents radFrameColor As System.Windows.Forms.RadioButton
+    Friend WithEvents radFrameFull As System.Windows.Forms.RadioButton
+    Friend WithEvents radFrameROI As System.Windows.Forms.RadioButton
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents boxBaud As System.Windows.Forms.ComboBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
@@ -815,5 +824,6 @@ Partial Class Form1
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents Label14 As System.Windows.Forms.Label
     Friend WithEvents txtIntercept As System.Windows.Forms.TextBox
+    Friend WithEvents radFrameROIProc As System.Windows.Forms.RadioButton
 
 End Class
