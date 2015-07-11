@@ -519,11 +519,13 @@ Public Class Form1
             serialPort.DiscardOutBuffer()
 
             serialPort.Write("U")           ' Upon power-up, the LRF waits for a "U" character to be sent in order to automatically detect baud rate
-            serialPort.ReadTo(":")          ' Wait for the LRF to send a ":" indicating that a proper baud rate has been found and that it is ready to receive commands
+            txtMessage.AppendText(serialPort.ReadTo(vbCr & ":"))  ' Print any responses from the LRF module, such as start-up errors or warnings
+            txtMessage.AppendText(vbCr)
+            txtMessage.ScrollToCaret()
             ' If we don't receive the ":" within the default ReadTimeout, we'll get a TimeoutException
 
             ' Once we know the correct COM port is open and we can properly communicate with the LRF, 
-            ' set the read timeout in ms depending on the selected baud rate (long enough to receive an entire frame w/ some additional overhead)
+            ' set the read timeout in ms depending on the selected baud rate (long enough to receive an entire frame + some additional overhead)
             Select Case serialPort.BaudRate
                 Case 9600
                     serialPort.ReadTimeout = 30000
@@ -628,7 +630,6 @@ Public Class Form1
 
             txtMessage.AppendText(serialPort.PortName & Convert.ToString(" connected." & vbCr))  ' update screen with information
             txtMessage.ScrollToCaret()
-
             txtDataToSend.Focus()
 
         Catch ex As Exception
