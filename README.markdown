@@ -30,7 +30,7 @@ Created by Joe Grand of [Grand Idea Studio][5].
 
 License
 -------
-The JTAGulator design is distributed under a [Creative Commons Attribution 3.0 
+The LRF Image Viewer is distributed under a [Creative Commons Attribution 3.0 
 United States][6] license. This means that you can share and adapt the work, but 
 you must attribute the work to the original author. 
 
