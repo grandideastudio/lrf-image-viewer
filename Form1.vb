@@ -11,7 +11,7 @@ Public Class Form1
     Private Const _FB_Y_ROI As Integer = 16
 
     ' FW 2.x (Optimized)
-    Private Const _FB_X_ROI_2 As Integer = 320  ' 8 bits/pixel greyscale, only using the Y/luma component
+    Private Const _FB_X_ROI_2 As Integer = 320 '324  ' 8 bits/pixel greyscale, only using the Y/luma component
     Private Const _FB_Y_ROI_2 As Integer = 16
 
     ' Range finding (optional, since this can be done directly on the LRF module, as well)
@@ -88,13 +88,22 @@ Public Class Form1
 
     End Sub
 
+    'Used to Send Messages to the control and will be used with a request for the current line number in the textbox control.
+    'From http://www.vbforfree.com/tag/sb_bottom/
+    Private Declare Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal winHandle As Int32, ByVal wMsg As Int32, ByVal wParam As Int32, ByVal lParam As Int32) As Int32
+
+    'Constants used for the SendMessage API call function.
+    Private Const EM_SCROLL = &HB5
+    Private Const SB_BOTTOM = 7
+    Private Const SB_TOP = 6
+
     Public Delegate Sub myDelegate()
     Public Sub updateTextBox()
         With txtDataReceived
             .SelectionColor = Color.White
             .AppendText(serialPort.ReadExisting)  ' read all existing bytes from the serial port buffer and print to screen
-            .ScrollToCaret()
         End With
+        SendMessage(txtDataReceived.Handle.ToInt32, EM_SCROLL, SB_BOTTOM, 0)
     End Sub
 
 
@@ -240,9 +249,9 @@ Public Class Form1
                 Next
             ElseIf (fw_ver = 2) Then ' Optimized
                 ' initialize variables
-                Dim upper_bound, lower_bound As Byte     ' tracking parameters, pixel must be within these bounds in order to be considered
-                lower_bound = yUDLower.Value / 100 * 255     ' normalize values
-                upper_bound = yUDUpper.Value / 100 * 255
+                Dim upper_bound, lower_bound As Byte        ' tracking parameters, pixel must be within these bounds in order to be considered
+                lower_bound = yUDLower.Value
+                upper_bound = yUDUpper.Value
 
                 ' threshold each pixel based on the lower and upper greyscale bounds
                 For iy = 0 To (_FB_Y_ROI_2 - 1)           ' for each row of Y
@@ -341,12 +350,30 @@ Public Class Form1
                 ' determine and highlight the blob with the largest mass (this is likely our laser spot)
                 ' if there are two blobs with the same mass, the first occurrence remains the maximum/primary
                 Dim max As Integer = 0          ' index into the blob array and points to the largest mass
-                For ix = 0 To (num_blobs - 1)
-                    If (blob(ix).mass > blob(max).mass) Then
-                        max = ix
-                    End If
-                Next
-                txtMessage.AppendText(Convert.ToString("Primary blob: ") & Convert.ToString(max) & vbCr)
+                If (fw_ver = 1) Then ' Original
+                    found_blob = True ' unused variable for original firmware
+                    For ix = 0 To (num_blobs - 1)
+                        If (blob(ix).mass > blob(max).mass) Then
+                            max = ix
+                        End If
+                    Next
+                ElseIf (fw_ver = 2) Then ' Optimized
+                    found_blob = False
+                    For ix = 0 To (num_blobs - 1)
+                        If (blob(ix).mass > UDBlobMass.Value) Then    ' if blob is greater than minimum threshold mass (otherwise ignore it)
+                            If (found_blob = False Or (blob(ix).mass > blob(max).mass)) Then
+                                max = ix
+                                found_blob = True
+                            End If
+                        End If
+                    Next
+                End If
+
+                If (found_blob = False) Then
+                    txtMessage.AppendText(Convert.ToString("Primary blob: None") & vbCr)
+                Else
+                    txtMessage.AppendText(Convert.ToString("Primary blob: ") & Convert.ToString(max) & vbCr)
+                End If
                 txtMessage.ScrollToCaret()
 
                 Dim roi_max As Integer
@@ -486,8 +513,8 @@ Public Class Form1
             With txtDataReceived
                 .SelectionColor = Color.Cornsilk
                 .AppendText(txtDataToSend.Text)         ' echo the text to the text box
-                .ScrollToCaret()
             End With
+            SendMessage(txtDataReceived.Handle.ToInt32, EM_SCROLL, SB_BOTTOM, 0)
             txtDataToSend.Text = String.Empty           ' clear buffer
 
         Catch ex As Exception
@@ -544,11 +571,26 @@ Public Class Form1
             serialPort.ReadTo("FW = ")      ' Wait for the LRF to send firmware version
             fw_ver = serialPort.ReadByte - &H30 ' Set major version number as decimal value (used for code to support different versions)
 
-            ' Read SLOPE and INTERCEPT values and place into the text boxes
-            serialPort.ReadTo("SLOPE = ")    ' Wait for the LRF to send slope value
+            ' Read calibration and parameter values and place into the text boxes
+            serialPort.ReadTo("SLOPE = ")           ' Wait for the LRF to send value
             txtSlope.Text = serialPort.ReadTo(" ")
-            serialPort.ReadTo("INT = ")    ' Wait for the LRF to send intercept value
+            serialPort.ReadTo("INT = ")             ' Wait for the LRF to send value
             txtIntercept.Text = serialPort.ReadTo(" ")
+
+            If (fw_ver = 1) Then ' Original
+                yUDLower.Maximum = 100
+                yUDUpper.Maximum = 100
+            ElseIf (fw_ver = 2) Then ' Optimized
+                yUDLower.Maximum = 255
+                yUDUpper.Maximum = 255
+                serialPort.ReadTo("LOWER_BOUND = ")     ' Wait for the LRF to send value
+                yUDLower.Value = CDec(Val(serialPort.ReadTo(vbCr)))
+                serialPort.ReadTo("UPPER_BOUND = ")     ' Wait for the LRF to send value
+                yUDUpper.Value = CDec(Val(serialPort.ReadTo(vbCr)))
+                serialPort.ReadTo("BLOB_MASS_THRESHOLD = ")   ' Wait for the LRF to send value
+                UDBlobMass.Value = CDec(Val(serialPort.ReadTo(vbCr)))
+            End If
+
             serialPort.ReadTo(":")          ' Wait for the LRF to send a ":" indicating that it is ready to receive the next command
             ' If we don't receive the ":" within the default ReadTimeout, we'll get a TimeoutException
 
@@ -578,20 +620,24 @@ Public Class Form1
                     uUDLower.Enabled = True
                     vUDUpper.Enabled = True
                     vUDLower.Enabled = True
+                    UDBlobMass.Enabled = False
                     LabelUUpper.Enabled = True
                     LabelVUpper.Enabled = True
                     LabelULower.Enabled = True
                     LabelVLower.Enabled = True
+                    LabelBlobMass.Enabled = False
                 ElseIf (fw_ver = 2) Then ' Optimized
                     ' disable U/V bound controls, since we're now only using greyscale values
                     uUDUpper.Enabled = False
                     uUDLower.Enabled = False
                     vUDUpper.Enabled = False
                     vUDLower.Enabled = False
+                    UDBlobMass.Enabled = True
                     LabelUUpper.Enabled = False
                     LabelVUpper.Enabled = False
                     LabelULower.Enabled = False
                     LabelVLower.Enabled = False
+                    LabelBlobMass.Enabled = True
                 End If
                 pnlBounds.Enabled = True
                 txtSlope.Enabled = True
@@ -603,13 +649,12 @@ Public Class Form1
             If (fw_ver = 1) Then  ' Original
                 rgb_l = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDLower.Value / 100.0), (-0.436 + (Convert.ToDouble(uUDLower.Value / 100.0))), (-0.615 + (Convert.ToDouble(vUDLower.Value / 100.0))))
                 rgb_u = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDUpper.Value / 100.0), (-0.436 + (Convert.ToDouble(uUDUpper.Value / 100.0))), (-0.615 + (Convert.ToDouble(vUDUpper.Value / 100.0))))
+                pnlLower.BackColor = Color.FromArgb(rgb_l.Red, rgb_l.Green, rgb_l.Blue)
+                pnlUpper.BackColor = Color.FromArgb(rgb_u.Red, rgb_u.Green, rgb_u.Blue)
             ElseIf (fw_ver = 2) Then ' Optimized
-                rgb_l = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDLower.Value / 100.0), 0, 0)
-                rgb_u = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDUpper.Value / 100.0), 0, 0)
+                pnlLower.BackColor = Color.FromArgb(yUDLower.Value, yUDLower.Value, yUDLower.Value)
+                pnlUpper.BackColor = Color.FromArgb(yUDUpper.Value, yUDUpper.Value, yUDUpper.Value)
             End If
-
-            pnlLower.BackColor = Color.FromArgb(rgb_l.Red, rgb_l.Green, rgb_l.Blue)
-            pnlUpper.BackColor = Color.FromArgb(rgb_u.Red, rgb_u.Green, rgb_u.Blue)
 
             ' set correct resolution of bitmap and text labels based on currently selected radio button
             If (radFrameFull.Checked) Then
@@ -668,6 +713,8 @@ Public Class Form1
             pnlBounds.Enabled = False
             txtSlope.Enabled = False
             txtIntercept.Enabled = False
+            UDBlobMass.Enabled = False
+            LabelBlobMass.Enabled = False
 
             lblPFC.Text = String.Empty          ' clear text boxes
             lblRangeCm.Text = String.Empty
@@ -706,20 +753,24 @@ Public Class Form1
                 uUDLower.Enabled = True
                 vUDUpper.Enabled = True
                 vUDLower.Enabled = True
+                UDBlobMass.Enabled = False
                 LabelUUpper.Enabled = True
                 LabelVUpper.Enabled = True
                 LabelULower.Enabled = True
                 LabelVLower.Enabled = True
+                LabelBlobMass.Enabled = False
             ElseIf (fw_ver = 2) Then ' Optimized
                 ' disable U/V bound controls, since we're now only using greyscale values
                 uUDUpper.Enabled = False
                 uUDLower.Enabled = False
                 vUDUpper.Enabled = False
                 vUDLower.Enabled = False
+                UDBlobMass.Enabled = True
                 LabelUUpper.Enabled = False
                 LabelVUpper.Enabled = False
                 LabelULower.Enabled = False
                 LabelVLower.Enabled = False
+                LabelBlobMass.Enabled = True
             End If
             pnlBounds.Enabled = True
             txtSlope.Enabled = True
@@ -731,6 +782,8 @@ Public Class Form1
             pnlBounds.Enabled = False
             txtSlope.Enabled = False
             txtIntercept.Enabled = False
+            UDBlobMass.Enabled = False
+            LabelBlobMass.Enabled = False
         End If
     End Sub
 
@@ -752,6 +805,8 @@ Public Class Form1
             pnlBounds.Enabled = False
             txtSlope.Enabled = False
             txtIntercept.Enabled = False
+            UDBlobMass.Enabled = False
+            LabelBlobMass.Enabled = False
         End If
     End Sub
 
@@ -780,6 +835,8 @@ Public Class Form1
             pnlBounds.Enabled = False
             txtSlope.Enabled = False
             txtIntercept.Enabled = False
+            UDBlobMass.Enabled = False
+            LabelBlobMass.Enabled = False
         End If
     End Sub
 
@@ -810,20 +867,24 @@ Public Class Form1
                 uUDLower.Enabled = True
                 vUDUpper.Enabled = True
                 vUDLower.Enabled = True
+                UDBlobMass.Enabled = False
                 LabelUUpper.Enabled = True
                 LabelVUpper.Enabled = True
                 LabelULower.Enabled = True
                 LabelVLower.Enabled = True
+                LabelBlobMass.Enabled = False
             ElseIf (fw_ver = 2) Then ' Optimized
                 ' disable U/V bound controls, since we're now only using greyscale values
                 uUDUpper.Enabled = False
                 uUDLower.Enabled = False
                 vUDUpper.Enabled = False
                 vUDLower.Enabled = False
+                UDBlobMass.Enabled = True
                 LabelUUpper.Enabled = False
                 LabelVUpper.Enabled = False
                 LabelULower.Enabled = False
                 LabelVLower.Enabled = False
+                LabelBlobMass.Enabled = True
             End If
             pnlBounds.Enabled = True
             txtSlope.Enabled = True
@@ -843,13 +904,12 @@ Public Class Form1
         If (fw_ver = 1) Then  ' Original
             rgb_l = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDLower.Value / 100.0), (-0.436 + (Convert.ToDouble(uUDLower.Value / 100.0))), (-0.615 + (Convert.ToDouble(vUDLower.Value / 100.0))))
             rgb_u = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDUpper.Value / 100.0), (-0.436 + (Convert.ToDouble(uUDUpper.Value / 100.0))), (-0.615 + (Convert.ToDouble(vUDUpper.Value / 100.0))))
+            pnlLower.BackColor = Color.FromArgb(rgb_l.Red, rgb_l.Green, rgb_l.Blue)
+            pnlUpper.BackColor = Color.FromArgb(rgb_u.Red, rgb_u.Green, rgb_u.Blue)
         ElseIf (fw_ver = 2) Then ' Optimized
-            rgb_l = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDLower.Value / 100.0), 0, 0)
-            rgb_u = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDUpper.Value / 100.0), 0, 0)
+            pnlLower.BackColor = Color.FromArgb(yUDLower.Value, yUDLower.Value, yUDLower.Value)
+            pnlUpper.BackColor = Color.FromArgb(yUDUpper.Value, yUDUpper.Value, yUDUpper.Value)
         End If
-
-        pnlLower.BackColor = Color.FromArgb(rgb_l.Red, rgb_l.Green, rgb_l.Blue)
-        pnlUpper.BackColor = Color.FromArgb(rgb_u.Red, rgb_u.Green, rgb_u.Blue)
     End Sub
 
     Private Sub YUVUpperValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles yUDUpper.ValueChanged, uUDUpper.ValueChanged, vUDUpper.ValueChanged
@@ -864,12 +924,11 @@ Public Class Form1
         If (fw_ver = 1) Then  ' Original
             rgb_l = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDLower.Value / 100.0), (-0.436 + (Convert.ToDouble(uUDLower.Value / 100.0))), (-0.615 + (Convert.ToDouble(vUDLower.Value / 100.0))))
             rgb_u = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDUpper.Value / 100.0), (-0.436 + (Convert.ToDouble(uUDUpper.Value / 100.0))), (-0.615 + (Convert.ToDouble(vUDUpper.Value / 100.0))))
+            pnlLower.BackColor = Color.FromArgb(rgb_l.Red, rgb_l.Green, rgb_l.Blue)
+            pnlUpper.BackColor = Color.FromArgb(rgb_u.Red, rgb_u.Green, rgb_u.Blue)
         ElseIf (fw_ver = 2) Then ' Optimized
-            rgb_l = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDLower.Value / 100.0), 0, 0)
-            rgb_u = ColorHelper.YUVtoRGB(Convert.ToDouble(yUDUpper.Value / 100.0), 0, 0)
+            pnlLower.BackColor = Color.FromArgb(yUDLower.Value, yUDLower.Value, yUDLower.Value)
+            pnlUpper.BackColor = Color.FromArgb(yUDUpper.Value, yUDUpper.Value, yUDUpper.Value)
         End If
-
-        pnlLower.BackColor = Color.FromArgb(rgb_l.Red, rgb_l.Green, rgb_l.Blue)
-        pnlUpper.BackColor = Color.FromArgb(rgb_u.Red, rgb_u.Green, rgb_u.Blue)
     End Sub
 End Class

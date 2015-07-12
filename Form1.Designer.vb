@@ -79,6 +79,8 @@ Partial Class Form1
         Me.Label10 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.txtIntercept = New System.Windows.Forms.TextBox()
+        Me.UDBlobMass = New System.Windows.Forms.NumericUpDown()
+        Me.LabelBlobMass = New System.Windows.Forms.Label()
         Me.pnlBounds.SuspendLayout()
         CType(Me.vUDUpper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.vUDLower, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -91,13 +93,14 @@ Partial Class Form1
         Me.Panel4.SuspendLayout()
         Me.pnlBitmap.SuspendLayout()
         CType(Me.pboxBitmap, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.UDBlobMass, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lblPFC
         '
         Me.lblPFC.BackColor = System.Drawing.Color.Gainsboro
         Me.lblPFC.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.lblPFC.Location = New System.Drawing.Point(808, 471)
+        Me.lblPFC.Location = New System.Drawing.Point(648, 561)
         Me.lblPFC.Name = "lblPFC"
         Me.lblPFC.Size = New System.Drawing.Size(30, 18)
         Me.lblPFC.TabIndex = 125
@@ -106,16 +109,16 @@ Partial Class Form1
         'Label25
         '
         Me.Label25.AutoSize = True
-        Me.Label25.Location = New System.Drawing.Point(712, 474)
+        Me.Label25.Location = New System.Drawing.Point(615, 564)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(94, 13)
+        Me.Label25.Size = New System.Drawing.Size(27, 13)
         Me.Label25.TabIndex = 124
-        Me.Label25.Text = "Pixels From Center"
+        Me.Label25.Text = "PFC"
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(778, 565)
+        Me.Label2.Location = New System.Drawing.Point(796, 564)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(21, 13)
         Me.Label2.TabIndex = 123
@@ -125,7 +128,7 @@ Partial Class Form1
         '
         Me.lblRangeIn.BackColor = System.Drawing.Color.Gainsboro
         Me.lblRangeIn.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.lblRangeIn.Location = New System.Drawing.Point(718, 590)
+        Me.lblRangeIn.Location = New System.Drawing.Point(736, 589)
         Me.lblRangeIn.Name = "lblRangeIn"
         Me.lblRangeIn.Size = New System.Drawing.Size(57, 18)
         Me.lblRangeIn.TabIndex = 122
@@ -134,7 +137,7 @@ Partial Class Form1
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(778, 593)
+        Me.Label18.Location = New System.Drawing.Point(796, 592)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(38, 13)
         Me.Label18.TabIndex = 121
@@ -144,7 +147,7 @@ Partial Class Form1
         '
         Me.lblRangeCm.BackColor = System.Drawing.Color.Gainsboro
         Me.lblRangeCm.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.lblRangeCm.Location = New System.Drawing.Point(718, 562)
+        Me.lblRangeCm.Location = New System.Drawing.Point(736, 561)
         Me.lblRangeCm.Name = "lblRangeCm"
         Me.lblRangeCm.Size = New System.Drawing.Size(57, 18)
         Me.lblRangeCm.TabIndex = 120
@@ -153,7 +156,7 @@ Partial Class Form1
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(674, 564)
+        Me.Label17.Location = New System.Drawing.Point(692, 563)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(39, 13)
         Me.Label17.TabIndex = 119
@@ -178,7 +181,7 @@ Partial Class Form1
         Me.pnlBounds.Controls.Add(Me.yUDUpper)
         Me.pnlBounds.Controls.Add(Me.LabelUUpper)
         Me.pnlBounds.Enabled = False
-        Me.pnlBounds.Location = New System.Drawing.Point(489, 496)
+        Me.pnlBounds.Location = New System.Drawing.Point(483, 488)
         Me.pnlBounds.Name = "pnlBounds"
         Me.pnlBounds.Size = New System.Drawing.Size(310, 59)
         Me.pnlBounds.TabIndex = 118
@@ -345,7 +348,7 @@ Partial Class Form1
         '
         Me.Panel1.Controls.Add(Me.radTrackBounds)
         Me.Panel1.Controls.Add(Me.radTrackCentroid)
-        Me.Panel1.Location = New System.Drawing.Point(564, 468)
+        Me.Panel1.Location = New System.Drawing.Point(558, 460)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(136, 26)
         Me.Panel1.TabIndex = 16
@@ -379,7 +382,7 @@ Partial Class Form1
         '
         Me.chkBlob.AutoSize = True
         Me.chkBlob.Enabled = False
-        Me.chkBlob.Location = New System.Drawing.Point(463, 473)
+        Me.chkBlob.Location = New System.Drawing.Point(457, 465)
         Me.chkBlob.Name = "chkBlob"
         Me.chkBlob.Size = New System.Drawing.Size(96, 17)
         Me.chkBlob.TabIndex = 9
@@ -390,7 +393,7 @@ Partial Class Form1
         '
         Me.Panel3.Controls.Add(Me.radSaveBitmap)
         Me.Panel3.Controls.Add(Me.radSaveRaw)
-        Me.Panel3.Location = New System.Drawing.Point(564, 429)
+        Me.Panel3.Location = New System.Drawing.Point(558, 421)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(117, 26)
         Me.Panel3.TabIndex = 13
@@ -437,7 +440,7 @@ Partial Class Form1
         '
         'lblResY
         '
-        Me.lblResY.Location = New System.Drawing.Point(790, 430)
+        Me.lblResY.Location = New System.Drawing.Point(796, 421)
         Me.lblResY.Name = "lblResY"
         Me.lblResY.Size = New System.Drawing.Size(26, 22)
         Me.lblResY.TabIndex = 104
@@ -447,7 +450,7 @@ Partial Class Form1
         'Label20
         '
         Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(781, 434)
+        Me.Label20.Location = New System.Drawing.Point(787, 425)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(12, 13)
         Me.Label20.TabIndex = 103
@@ -455,7 +458,7 @@ Partial Class Form1
         '
         'lblResX
         '
-        Me.lblResX.Location = New System.Drawing.Point(759, 430)
+        Me.lblResX.Location = New System.Drawing.Point(765, 421)
         Me.lblResX.Name = "lblResX"
         Me.lblResX.Size = New System.Drawing.Size(26, 22)
         Me.lblResX.TabIndex = 102
@@ -465,7 +468,7 @@ Partial Class Form1
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(700, 434)
+        Me.Label19.Location = New System.Drawing.Point(706, 426)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(63, 13)
         Me.Label19.TabIndex = 101
@@ -474,7 +477,7 @@ Partial Class Form1
         'btnSave
         '
         Me.btnSave.Enabled = False
-        Me.btnSave.Location = New System.Drawing.Point(460, 429)
+        Me.btnSave.Location = New System.Drawing.Point(454, 421)
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(98, 23)
         Me.btnSave.TabIndex = 8
@@ -486,7 +489,7 @@ Partial Class Form1
         Me.Panel4.Controls.Add(Me.radFrameROIProc)
         Me.Panel4.Controls.Add(Me.radFrameFull)
         Me.Panel4.Controls.Add(Me.radFrameROI)
-        Me.Panel4.Location = New System.Drawing.Point(564, 390)
+        Me.Panel4.Location = New System.Drawing.Point(558, 382)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(226, 27)
         Me.Panel4.TabIndex = 10
@@ -556,7 +559,7 @@ Partial Class Form1
         'btnGrab
         '
         Me.btnGrab.Enabled = False
-        Me.btnGrab.Location = New System.Drawing.Point(460, 390)
+        Me.btnGrab.Location = New System.Drawing.Point(454, 382)
         Me.btnGrab.Name = "btnGrab"
         Me.btnGrab.Size = New System.Drawing.Size(98, 23)
         Me.btnGrab.TabIndex = 7
@@ -670,7 +673,7 @@ Partial Class Form1
         '
         'txtSlope
         '
-        Me.txtSlope.Location = New System.Drawing.Point(565, 561)
+        Me.txtSlope.Location = New System.Drawing.Point(510, 561)
         Me.txtSlope.Name = "txtSlope"
         Me.txtSlope.Size = New System.Drawing.Size(94, 20)
         Me.txtSlope.TabIndex = 129
@@ -679,7 +682,7 @@ Partial Class Form1
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(525, 563)
+        Me.Label10.Location = New System.Drawing.Point(470, 563)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(34, 13)
         Me.Label10.TabIndex = 130
@@ -688,7 +691,7 @@ Partial Class Form1
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(510, 592)
+        Me.Label14.Location = New System.Drawing.Point(455, 592)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(49, 13)
         Me.Label14.TabIndex = 132
@@ -696,11 +699,34 @@ Partial Class Form1
         '
         'txtIntercept
         '
-        Me.txtIntercept.Location = New System.Drawing.Point(565, 590)
+        Me.txtIntercept.Location = New System.Drawing.Point(510, 590)
         Me.txtIntercept.Name = "txtIntercept"
         Me.txtIntercept.Size = New System.Drawing.Size(94, 20)
         Me.txtIntercept.TabIndex = 131
         Me.txtIntercept.TabStop = False
+        '
+        'UDBlobMass
+        '
+        Me.UDBlobMass.Enabled = False
+        Me.UDBlobMass.Location = New System.Drawing.Point(808, 463)
+        Me.UDBlobMass.Maximum = New Decimal(New Integer() {255, 0, 0, 0})
+        Me.UDBlobMass.Name = "UDBlobMass"
+        Me.UDBlobMass.Size = New System.Drawing.Size(46, 20)
+        Me.UDBlobMass.TabIndex = 133
+        Me.UDBlobMass.Value = New Decimal(New Integer() {16, 0, 0, 0})
+        '
+        'LabelBlobMass
+        '
+        Me.LabelBlobMass.AutoSize = True
+        Me.LabelBlobMass.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.LabelBlobMass.Enabled = False
+        Me.LabelBlobMass.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelBlobMass.Location = New System.Drawing.Point(706, 466)
+        Me.LabelBlobMass.Name = "LabelBlobMass"
+        Me.LabelBlobMass.Size = New System.Drawing.Size(100, 13)
+        Me.LabelBlobMass.TabIndex = 134
+        Me.LabelBlobMass.Text = "Minimum Blob Mass"
+        Me.LabelBlobMass.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Form1
         '
@@ -708,6 +734,8 @@ Partial Class Form1
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.LightGray
         Me.ClientSize = New System.Drawing.Size(888, 635)
+        Me.Controls.Add(Me.LabelBlobMass)
+        Me.Controls.Add(Me.UDBlobMass)
         Me.Controls.Add(Me.Label14)
         Me.Controls.Add(Me.txtIntercept)
         Me.Controls.Add(Me.Label10)
@@ -762,6 +790,7 @@ Partial Class Form1
         Me.Panel4.PerformLayout()
         Me.pnlBitmap.ResumeLayout(False)
         CType(Me.pboxBitmap, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.UDBlobMass, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -825,5 +854,7 @@ Partial Class Form1
     Friend WithEvents Label14 As System.Windows.Forms.Label
     Friend WithEvents txtIntercept As System.Windows.Forms.TextBox
     Friend WithEvents radFrameROIProc As System.Windows.Forms.RadioButton
+    Friend WithEvents UDBlobMass As System.Windows.Forms.NumericUpDown
+    Friend WithEvents LabelBlobMass As System.Windows.Forms.Label
 
 End Class
