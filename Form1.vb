@@ -2,16 +2,16 @@ Public Class Form1
     ' CONSTANTS
     ' Frame buffer resolutions
     ' Full frame
-    Private Const _FB_X_FULL As Integer = 160  ' 8 bits/pixel greyscale, only using the Y/luma component
+    Private Const _FB_X_FULL As Integer = 160   ' 8 bits/pixel greyscale, only using the Y/luma component
     Private Const _FB_Y_FULL As Integer = 128
 
     ' ROI (Region-of-Interest), used for actual laser range finding operations
     ' FW 1.x (Original)
-    Private Const _FB_X_ROI As Integer = 640  ' 16 bits/pixel YUV422 color
+    Private Const _FB_X_ROI As Integer = 640    ' 16 bits/pixel YUV422 color
     Private Const _FB_Y_ROI As Integer = 16
 
     ' FW 2.x (Optimized)
-    Private Const _FB_X_ROI_2 As Integer = 320 '324  ' 8 bits/pixel greyscale, only using the Y/luma component
+    Private Const _FB_X_ROI_2 As Integer = 320  ' 8 bits/pixel greyscale, only using the Y/luma component
     Private Const _FB_Y_ROI_2 As Integer = 16
 
     ' Range finding (optional, since this can be done directly on the LRF module, as well)
